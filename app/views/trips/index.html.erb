@@ -1,0 +1,15 @@
+<div class="mt-3 mb-3">
+  <%= link_to "New Trip", new_trip_path, class: "btn btn-primary" %>
+</div>
+<% @trips.each do |trip| %>
+  <div class="card p-3 trip-card">
+    <h4><%= trip.title %></h4>
+    <% if trip.description %>
+      <p><%= trip.description %>
+    <% end %>
+    <div>From: <%= trip.origin %></div>
+    <div>to: <%= trip.destination %></div>
+    <div>Leaving: <%= trip.departing_at %></div>
+    <%= button_to "Join", join_trip_path(trip), class: "btn btn-primary mt-2" %>
+  </div>
+<% end %>

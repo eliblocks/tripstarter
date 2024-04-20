@@ -1,0 +1,28 @@
+<%= form_with model: @trip, class: "mt-4 trip-form" do |form| %>
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :origin, class: "form-label" %>
+    <%= form.text_field :origin, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :destination, class: "form-label" %>
+    <%= form.text_field :destination, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :departing_at, class: "form-label" %>
+    <%= form.datetime_field :departing_at, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :capacity, class: "form-label" %>
+    <%= form.number_field :capacity, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <%= form.submit "Submit", class: "btn btn-primary" %>
+<% end %>
