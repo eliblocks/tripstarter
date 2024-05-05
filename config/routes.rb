@@ -11,8 +11,12 @@ Rails.application.routes.draw do
 
   resources :trips do
     member do
-      patch "join"
-      patch "accept"
+      post :join
+      patch :leave
+      patch :accept
+      patch :cancel
     end
   end
+
+  resources :rides, only: [:create, :update]
 end

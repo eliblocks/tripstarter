@@ -4,12 +4,42 @@
 <% @trips.each do |trip| %>
   <div class="card p-3 trip-card">
     <h4><%= trip.title %></h4>
+    <p class=<%= trip.status_color %>><%= trip.status %></p>
     <% if trip.description %>
-      <p><%= trip.description %>
+      <p><%= trip.description %></p>
+    <% end %>
+    <div>Organizer: <%= trip.requester.name %></div>
+    <% if trip.driver %>
+      <div>Driver: <%= trip.driver.name %></div>
     <% end %>
     <div>From: <%= trip.origin %></div>
     <div>to: <%= trip.destination %></div>
     <div>Leaving: <%= trip.departing_at %></div>
-    <%= button_to "Join", join_trip_path(trip), class: "btn btn-primary mt-2" %>
+    <div>
+      Going: <%= trip.riders.count + 1 %> / <%= trip.capacity %>
+    </div>
+    <div class="d-flex">
+      <div class="initials"><%= trip.requester.initials %></div>
+      <% trip.riders.each do |rider| %>
+        <div class="initials"><%= rider.initials %></div>
+      <% end %>
+    </div>
+    <div class="d-flex">
+      <% unless @joined_trips&.include?(trip) || trip.driver == current_user %>
+        <%= button_to "Join", join_trip_path(trip), class: "btn btn-primary m-2" %>
+      <% end %>
+
+      <% if @joined_trips&.include?(trip) %>
+        <%= button_to "Leave", leave_trip_path(trip), method: :patch, class: "btn btn-primary m-2" %>
+      <% end %>
+
+      <% if current_user&.driver? && trip.driver.nil? && !@joined_trips&.include?(trip) %>
+        <%= button_to "Accept", accept_trip_path(trip), method: :patch, class: "btn btn-primary m-2" %>
+      <% end %>
+
+      <% if trip.driver == current_user %>
+        <%= button_to "Cancel", cancel_trip_path(trip), method: :patch, class: "btn btn-danger m-2" %>
+      <% end %>
+    </div>
   </div>
 <% end %>

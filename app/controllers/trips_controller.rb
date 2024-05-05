@@ -1,9 +1,11 @@
 class TripsController < ApplicationController
   before_action :authenticate_user!, except: :index
-  before_action :authenticate_requester, except: [:index, :new, :create]
+  before_action :authenticate_requester!, only: [:edit, :update]
 
   def index
     @trips = Trip.all
+
+    @joined_trips = current_user&.joined_trips
   end
 
   def new
@@ -27,9 +29,36 @@ class TripsController < ApplicationController
   end
 
   def join
+    @trip = Trip.find(params[:id])
+    current_user.rides.create(trip: @trip)
+
+    redirect_to trips_path
+  end
+
+  def leave
+    @trip = Trip.find(params[:id])
+    current_user.rides.find_by(trip: @trip).destroy
+
+    redirect_to trips_path
   end
 
   def accept
+    redirect_to root_path unless current_user.driver?
+
+    @trip = Trip.find(params[:id])
+
+    @trip.update(driver: current_user)
+
+    redirect_to trips_path
+  end
+
+  def cancel
+    @trip = Trip.find(params[:id])
+    redirect_to root_path unless current_user == @trip.driver
+
+    @trip.update(driver: nil)
+
+    redirect_to root_path
   end
 
   def destroy
